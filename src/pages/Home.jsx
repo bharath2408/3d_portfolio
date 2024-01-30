@@ -1,5 +1,6 @@
 import { Canvas } from "@react-three/fiber";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import sakura from "../assets/sakura.mp3";
 import HomeInfo from "../components/HomeInfo";
 import Loader from "../components/Loader";
 import AmongUs from "../models/AmongUs";
@@ -11,6 +12,9 @@ import Plane from "../models/Plane";
 import Sky from "../models/Sky";
 
 const Home = () => {
+  const audioRef = useRef(new Audio(sakura));
+  audioRef.current.volume = 0.4;
+  audioRef.current.loop = true;
   const [isRotating, setIsRotating] = useState(false);
   const [currentStage, setCurrentStage] = useState(0);
   const adjustIslandForScreenSize = () => {
@@ -21,7 +25,7 @@ const Home = () => {
     if (window.innerWidth > 768) {
       screenScale = [0.9, 0.9, 0.9];
     } else {
-      screenScale = [1, 1, 1];
+      screenScale = [0.4, 0.4, 0.4];
     }
     return [screenScale, screenPosition, rotation];
   };
@@ -30,11 +34,11 @@ const Home = () => {
     let screenScale, screenPosition;
 
     if (window.innerWidth > 768) {
-      screenScale = [1.5, 1.5, 1.5];
+      screenScale = [1, 1, 1];
       screenPosition = [0, -1.5, 0];
     } else {
-      screenScale = [3, 3, 3];
-      screenPosition = [0, -4, -4];
+      screenScale = [0.5, 0.5, 0.5];
+      screenPosition = [0, -1, -1];
     }
     return [screenScale, screenPosition];
   };
@@ -43,11 +47,11 @@ const Home = () => {
     let screenScale, screenPosition;
 
     if (window.innerWidth > 768) {
-      screenScale = [1, 1, 1];
-      screenPosition = [0, -1.5, 0];
+      screenScale = [0.2, 0.2, 0.2];
+      screenPosition = [-1, -1.7, -0.2];
     } else {
-      screenScale = [1, 1, 1];
-      screenPosition = [0, -4, -6];
+      screenScale = [0.3, 0.3, 0.3];
+      screenPosition = [-1.5, -3.7, -14];
     }
     return [screenScale, screenPosition];
   };
@@ -56,6 +60,10 @@ const Home = () => {
     adjustIslandForScreenSize();
   const [planeScale, planePosition] = adjustPlaneForScreenSize();
   const [luffyScale, luffyPosition] = adjustLuffyForScreenSize();
+
+  useEffect(() => {
+    audioRef.current.play();
+  }, []);
 
   return (
     <section className="w-full h-screen relative">
@@ -89,8 +97,8 @@ const Home = () => {
           />
           <AmongUs
             isRotating={isRotating}
-            scale={[0.3, 0.3, 0.3]}
-            position={[-1.5, -1.6, 0.4]}
+            scale={luffyScale}
+            position={luffyPosition}
             rotation={[0, 20, 0]}
             currentStage={currentStage}
           />
